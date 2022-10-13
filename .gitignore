@@ -127,3 +127,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Cruft
+*.swp
+database.db
+.DS_Store
+
+# IDEs
+.idea
+.vscode
