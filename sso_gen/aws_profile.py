@@ -12,7 +12,6 @@ from .sso import SsoClient
 
 CONFIG_FILE = config.files["config_file"]
 CREDENTIALS_FILE = config.files["credentials_file"]
-PROFILE_PREFIX = config.aws["profile_prefix"]
 ORG_PREFIX = config.aws["org_prefix"]
 DEFAULT_PROFILE = config.DEFAULT_PROFILE
 
