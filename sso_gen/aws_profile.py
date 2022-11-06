@@ -4,11 +4,11 @@
 # Standard Library
 import configparser
 
+# Third Party Libraries
+from . import sso
+
 # Custom Libraries
 from sso_gen import config
-
-# Third Party Libraries
-from .sso import SsoClient
 
 CONFIG_FILE = config.files["config_file"]
 CREDENTIALS_FILE = config.files["credentials_file"]
@@ -40,7 +40,7 @@ class AwsProfiles:
             self.config_file["content"], DEFAULT_PROFILE
         )
 
-        self.sso_client = SsoClient(self.sso_profile)
+        self.sso_client = sso.SsoClient(self.sso_profile)
 
     @staticmethod
     def get_aws_file(file_path) -> configparser.RawConfigParser:
@@ -83,15 +83,18 @@ class AwsProfiles:
             for role_info in self.sso_client.get_role_list(account_id):
                 role_name = role_info["roleName"]
                 try:
-                    creds_profile = f"""{ORG_PREFIX}-
-                    {config.aws["account_map"][account_id]}-{role_name}"""
+                    creds_profile = (
+                        f"{ORG_PREFIX}-"
+                        f'{config.aws["account_map"][account_id]}-'
+                        f"{role_name}"
+                    )
                 except KeyError as err:
                     print(
-                        f"Can't get map for account {account_id}. New account? "
+                        f"Can't get map for account {account_id}. New account?\n"
                         f"SKIPPING: {err}"
                     )
                     continue
-                config_profile = f"""profile {creds_profile}"""
+                config_profile = f"profile {creds_profile}"
                 print(f"{creds_profile}")
 
                 creds = self.sso_client.get_role_creds(account_id, role_name)
