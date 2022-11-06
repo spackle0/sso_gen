@@ -30,8 +30,8 @@ aws = {
     "org_prefix": f"{COMPANY}",
     "base_profile": "profile " + config("BASE_PROFILE", default="login"),
     "account_map": {
-        "111872733702": "org",
-        "827910251795": "aud",
-        "493816127183": "log",
+        "111111111111": "org",
+        "222222222222": "prd",
+        "333333333333": "dev",
     },
 }
