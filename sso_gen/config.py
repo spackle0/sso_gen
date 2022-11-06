@@ -1,5 +1,9 @@
 # coding=utf-8
-"""Configuration settings for the app"""
+"""
+Configuration settings for the app
+
+Edit for your environment. Use .env (copy from .env.example).
+"""
 
 # Standard Library
 import os

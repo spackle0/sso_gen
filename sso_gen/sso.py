@@ -1,5 +1,7 @@
 # coding=utf-8
-"""SSO Classes"""
+"""
+SSO Classes
+"""
 
 # Standard Library
 import glob

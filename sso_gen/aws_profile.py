@@ -1,14 +1,15 @@
 # coding=utf-8
-"""Class for manipulating AWS configuration and credentials files"""
+"""
+Class for manipulating AWS configuration and credentials files
+"""
 
 # Standard Library
 import configparser
 
-# Third Party Libraries
-from . import sso
-
 # Custom Libraries
 from sso_gen import config
+
+from . import sso
 
 CONFIG_FILE = config.files["config_file"]
 CREDENTIALS_FILE = config.files["credentials_file"]
@@ -16,6 +17,7 @@ ORG_PREFIX = config.aws["org_prefix"]
 DEFAULT_PROFILE = config.DEFAULT_PROFILE
 
 
+# TODO: Break this up, SRP of SOLID
 class AwsProfiles:
     """
     Manipulates AWS config and credentials.

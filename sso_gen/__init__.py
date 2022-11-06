@@ -1,7 +1,7 @@
 # coding=utf-8
 """
-Prompt the user via browser to log in to sso, then populate config/credentials for any
-accounts and roles assigned to that user.
+Prompt the user via browser to log in to AWS SSO, then populate config/credentials
+for any accounts and roles assigned to that user.
 
 Made with a few snippets from https://github.com/kcerdena/aws_sso.
 """
