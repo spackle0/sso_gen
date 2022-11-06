@@ -8,6 +8,8 @@ sso_gen will:
 ## Setup
 * Copy `.env.example` to `.env` and edit to add the correct values most importantly:
   * `SSO_START_URL=https://d-XXXXXXXXXX.awsapps.com/start`
+* Copy `acct_map.example.json` to `acct_map.json` and give each account an 
+  appreviation for use in a profile name
 * Optional: Install the needed python and poetry versions with [`asdf`](https://asdf-vm.com/) if they are not in your system path
 * Have the minimum in your `~/.aws/config` (TODO: auto-create)
 ```

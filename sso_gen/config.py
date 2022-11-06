@@ -6,6 +6,7 @@ Edit for your environment. Use .env (copy from .env.example).
 """
 
 # Standard Library
+import json
 import os
 
 # Third Party Libraries
@@ -29,13 +30,12 @@ files = {
     "credentials_file": os.path.join(BASE_DIR, "credentials"),
 }
 
+with open("acct_map.json") as acct_map:
+    acct_maps = json.load(acct_map)
+
 aws = {
     "sso_start_url": SSO_START_URL,
     "org_prefix": f"{COMPANY}",
     "base_profile": "profile " + config("BASE_PROFILE", default="login"),
-    "account_map": {
-        "111111111111": "org",
-        "222222222222": "prd",
-        "333333333333": "dev",
-    },
+    "account_map": acct_maps
 }
