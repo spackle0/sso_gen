@@ -34,7 +34,7 @@ bump_patch:
 # Run from cmdline
 .PHONY: run
 run:
-	poetry run python sso_gen/ssogen.py
+	poetry run python ssogen.py
 
 ##
 # Code formatting

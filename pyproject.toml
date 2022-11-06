@@ -28,7 +28,7 @@ pyinstaller = "^4.5.1"
 ufmt = "^1.3.3"
 
 [tool.poetry.scripts]
-sso_gen = "sso_gen:main"
+sso_stuff = "sso_gen:main"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
