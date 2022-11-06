@@ -16,7 +16,7 @@ from botocore.exceptions import ClientError, ParamValidationError
 from dateutil import parser
 
 # Custom Libraries
-import sso_gen.config as config
+from sso_gen import config
 
 CACHE_DIR = config.files["cache_dir"]
 
@@ -25,13 +25,9 @@ CACHE_DIR = config.files["cache_dir"]
 class NeedNewToken(Exception):
     """If there is no cached token"""
 
-    pass
-
 
 class CommandError(Exception):
     """If there was a problem running a shell command"""
-
-    pass
 
 
 class SsoClient:
@@ -55,10 +51,11 @@ class SsoClient:
     def get_cached_sso_token(
         self,
     ) -> str:  # pylint: disable=inconsistent-return-statements
-        """Grab the SSO token from the cache. If it's expired, ask the user to SSO login"""
+        """Grab the SSO token from the cache. If it's expired, ask the user
+        to SSO login"""
         keys = {"startUrl", "accessToken", "expiresAt"}
         for file in glob.glob(os.path.join(self.cache_dir, "*.json")):
-            with open(file) as json_file:
+            with open(file, mode="r", encoding="utf-8") as json_file:
                 content = json.load(json_file)
             # If we have at least the above keys, and the token isn't expired, then
             # we have a current token
@@ -67,7 +64,7 @@ class SsoClient:
                 self.access_token = content["accessToken"]
                 return self.access_token
 
-        # We didn't find a cached token or it was expired
+        # We didn't find a cached token, or it was expired
         raise NeedNewToken
 
     def get_account_list(self) -> dict:
@@ -80,7 +77,8 @@ class SsoClient:
 
     def get_access_token(self) -> tuple:
         """
-        Try the cached access token (if it exists), otherwise get a new one and test that it works
+        Try the cached access token (if it exists), otherwise get a new one and test
+        that it works
         """
         count = 0
 
@@ -96,13 +94,13 @@ class SsoClient:
                 # We have an invalid token
                 if count >= config.MAX_SSO_RETRIES:
                     raise RuntimeError(
-                        f"Unable to obtain a new SSO Access Token."
+                        "Unable to obtain a new SSO Access Token."
                     ) from sso_error
 
                 count += 1
-                rc = SsoClient.sso_login(self.sso_profile)
-                if rc != 0:
-                    raise CommandError(f"sso login command had an error")
+                return_code = SsoClient.sso_login(self.sso_profile)
+                if return_code != 0:
+                    raise CommandError("sso login command had an error") from sso_error
                 continue
 
     def get_role_list(self, account_id):
@@ -130,23 +128,23 @@ class SsoClient:
     def sso_login(sso_profile: str) -> int:
         """
         2021-09-16
-        We have an expired or nonexistent sso token so we need to generate one. As of the writing of this,
-        boto3 does not have a mechanism to do "aws sso login" so we must use the shell. In addition, there
-        is no way around the need to log in to sso via a browser window.
-        There may be a way to do this with OIDC but it's a project for the future.
+        We have an expired or nonexistent sso token, so we need to generate one. As of
+        the writing of this, boto3 does not have a mechanism to do "aws sso login" so
+        we must use the shell. In addition, there is no way around the need to log in
+        to sso via a browser window. There may be a way to do this with OIDC, but it's
+        a project for the future.
         """
-        process = subprocess.Popen(
+        with subprocess.Popen(
             [f"aws sso login --profile {sso_profile}"],
             shell=True,
             stdout=subprocess.PIPE,
-        )
+        ) as process:
+            while True:
+                output = process.stdout.readline().strip().decode("utf-8")
+                if output == "" and process.poll() is not None:
+                    break
+                if output:
+                    print(output)
+            return_code = process.poll()
 
-        while True:
-            output = process.stdout.readline().strip().decode("utf-8")
-            if output == "" and process.poll() is not None:
-                break
-            if output:
-                print(output)
-        rc = process.poll()
-
-        return rc
+        return return_code

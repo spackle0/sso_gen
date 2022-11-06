@@ -28,7 +28,6 @@ files = {
 aws = {
     "sso_start_url": SSO_START_URL,
     "org_prefix": f"{COMPANY}-",
-    "profile_prefix": f"profile {COMPANY}-",
     "base_profile": "profile " + config("BASE_PROFILE", default="login"),
     "account_map": {
         "123456789012": "org",

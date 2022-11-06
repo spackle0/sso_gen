@@ -4,15 +4,15 @@
 # Standard Library
 import configparser
 
-# Third Party Libraries
-from sso import SsoClient
-
 # Custom Libraries
-import sso_gen.config as config
+from sso_gen import config
+
+# Third Party Libraries
+from .sso import SsoClient
 
 CONFIG_FILE = config.files["config_file"]
 CREDENTIALS_FILE = config.files["credentials_file"]
-PROFILE_PREFIX = config.aws["profile_prefix"]
+ORG_PREFIX = config.aws["org_prefix"]
 DEFAULT_PROFILE = config.DEFAULT_PROFILE
 
 
@@ -27,7 +27,6 @@ class AwsProfiles:
         self,
         config_file=CONFIG_FILE,
         credentials_file=CREDENTIALS_FILE,
-        prefix=PROFILE_PREFIX,
     ):
         self.config_file = {
             "content": AwsProfiles.get_aws_file(config_file),
@@ -84,10 +83,12 @@ class AwsProfiles:
             for role_info in self.sso_client.get_role_list(account_id):
                 role_name = role_info["roleName"]
                 try:
-                    creds_profile = f"""{config.aws.org_prefix}-{config.aws["account_map"][account_id]}-{role_name}"""
-                except KeyError as e:
+                    creds_profile = f"""{ORG_PREFIX}-
+                    {config.aws["account_map"][account_id]}-{role_name}"""
+                except KeyError as err:
                     print(
-                        f"Can't get map for account {account_id}. New account? SKIPPING"
+                        f"Can't get map for account {account_id}. New account? "
+                        f"SKIPPING: {err}"
                     )
                     continue
                 config_profile = f"""profile {creds_profile}"""
@@ -111,11 +112,13 @@ class AwsProfiles:
         )
 
         print(f'Writing "{credentials_file}"')
-        with open(self.credentials_file["path"], "w") as credentials_file_fp:
+        with open(
+            self.credentials_file["path"], mode="w", encoding="utf-8"
+        ) as credentials_file_fp:
             current_credentials.write(credentials_file_fp)
 
         print(f'Writing "{config_file}"')
-        with open(CONFIG_FILE, "w") as config_file_fp:
+        with open(CONFIG_FILE, mode="w", encoding="utf-8") as config_file_fp:
             current_config.write(config_file_fp)
 
     @staticmethod
