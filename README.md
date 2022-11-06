@@ -9,6 +9,12 @@ sso_gen will:
 * Copy `.env.example` to `.env` and edit to add the correct values most importantly:
   * `SSO_START_URL=https://d-XXXXXXXXXX.awsapps.com/start`
 * Optional: Install the needed python and poetry versions with [`asdf`](https://asdf-vm.com/) if they are not in your system path
+* Have the minimum in your `~/.aws/config` (TODO: auto-create)
+```
+[profile login]
+sso_start_url = https://d-XXXXXXXXXX.awsapps.com/start
+sso_region = us-east-1
+```
 
 ## Makefile
 

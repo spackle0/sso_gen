@@ -27,11 +27,11 @@ files = {
 
 aws = {
     "sso_start_url": SSO_START_URL,
-    "org_prefix": f"{COMPANY}-",
+    "org_prefix": f"{COMPANY}",
     "base_profile": "profile " + config("BASE_PROFILE", default="login"),
     "account_map": {
-        "123456789012": "org",
-        "999999999999": "dev",
-        "888888888888": "prd",
+        "111872733702": "org",
+        "827910251795": "aud",
+        "493816127183": "log",
     },
 }

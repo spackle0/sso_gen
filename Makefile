@@ -45,7 +45,8 @@ format:
 	@echo =========================
 	@echo Formatting...
 	@echo =========================
-	poetry run ufmt format sso_gen/*.py tests/*.py
+	poetry run black sso_gen/*.py tests/*.py
+	poetry run isort sso_gen/*.py tests/*.py
 
 # Separate because ufmt doesn't read config for section titles
 .PHONY: isort
