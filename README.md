@@ -1,7 +1,7 @@
 # AWS Credential Generator via SSO (IAM Identity Center)
 
 sso_gen will:
-* Log you in to SSO (SSO much be set up)
+* Log you in to SSO (SSO must be set up)
 * Create profiles for all accounts you have access to
 * Generate temporary credentials for each of those accounts
 
