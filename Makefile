@@ -39,7 +39,7 @@ run:
 ##
 # Code formatting
 
-# Format with ufmt: black and isort
+# Format with black and isort
 .PHONY: format
 format:
 	@echo =========================
@@ -77,6 +77,11 @@ sec:
 	poetry run bandit -c bandit.yml -r ${APP_NAME}
 	# OSS Violations
 	poetry run safety check
+
+.PHONY: scan
+scan:
+	echo "Doing a container scan"
+	docker scan ${IMAGE_NAME}
 
 ##
 # Container operations
