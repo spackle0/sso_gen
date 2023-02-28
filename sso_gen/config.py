@@ -30,12 +30,12 @@ files = {
     "credentials_file": os.path.join(BASE_DIR, "credentials"),
 }
 
-with open("acct_map.json") as acct_map:
+with open("acct_map.json", encoding="utf-8") as acct_map:
     acct_maps = json.load(acct_map)
 
 aws = {
     "sso_start_url": SSO_START_URL,
     "org_prefix": f"{COMPANY}",
     "base_profile": "profile " + config("BASE_PROFILE", default="login"),
-    "account_map": acct_maps
+    "account_map": acct_maps,
 }
