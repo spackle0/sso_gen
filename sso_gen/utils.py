@@ -1,0 +1,27 @@
+# coding=utf-8
+# Standard Library
+import logging
+
+
+def create_logger(debug: bool = False) -> logging.Logger:
+    """
+    Logging setup
+    with help from https://docs.python.org/3/howto/logging-cookbook.html
+    """
+    if debug:
+        loglevel = logging.DEBUG
+        formatter = logging.Formatter(
+            "%(asctime)s [%(levelname)s] (%(funcName)s:%(lineno)s) %(message)s"
+        )
+    else:
+        loglevel = logging.INFO
+        formatter = logging.Formatter("%(asctime)s [%(levelname)s] %(message)s")
+
+    logger = logging.getLogger("main")
+    logger.setLevel(loglevel)
+
+    loghandler = logging.StreamHandler()
+    loghandler.setFormatter(formatter)
+
+    logger.addHandler(loghandler)
+    return logger

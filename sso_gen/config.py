@@ -12,6 +12,8 @@ import os
 # Third Party Libraries
 from decouple import config
 
+from .utils import create_logger
+
 BASE_DIR = os.path.join(os.path.expanduser("~"), ".aws")
 
 # Get env vars
@@ -39,3 +41,5 @@ aws = {
     "base_profile": "profile " + config("BASE_PROFILE", default="login"),
     "account_map": acct_maps,
 }
+
+logger = create_logger(config("DEBUG", default=False, cast=bool))
