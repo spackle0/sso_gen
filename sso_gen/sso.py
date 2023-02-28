@@ -17,10 +17,9 @@ from botocore.config import Config
 from botocore.exceptions import ClientError, ParamValidationError
 from dateutil import parser
 
-# Custom Libraries
 from . import config
-from .custom_exceptions import (CantAccessAccount, CommandError,
-                                       NeedNewToken)
+from .config import logger
+from .custom_exceptions import CantAccessAccount, CommandError, NeedNewToken
 
 CACHE_DIR = config.files["cache_dir"]
 
@@ -43,7 +42,7 @@ class SsoClient:
         try:
             (self.access_token, self.account_list) = self.get_access_token()
         except CommandError as error:
-            print(f"Error getting access token: {error}")
+            logger.error("Error getting access token: %s", error)
             sys.exit(1)
 
     def get_cached_sso_token(
@@ -58,7 +57,7 @@ class SsoClient:
             # If we have at least the above keys, and the token isn't expired, then
             # we have a current token
             if content.keys() >= keys and SsoClient.unexpired(content["expiresAt"]):
-                print("Found an unexpired access token.")
+                logger.info("Found an unexpired access token.")
                 self.access_token = content["accessToken"]
                 return self.access_token
 
@@ -147,7 +146,7 @@ class SsoClient:
                 if output == "" and process.poll() is not None:
                     break
                 if output:
-                    print(output)
+                    logger.info(output)
             return_code = process.poll()
 
         return return_code

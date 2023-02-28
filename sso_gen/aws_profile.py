@@ -6,11 +6,9 @@ Class for manipulating AWS configuration and credentials files
 # Standard Library
 import configparser
 
-# Third Party Libraries
-from .custom_exceptions import CantAccessAccount
-
-# Custom Libraries
 from . import config, sso
+from .config import logger
+from .custom_exceptions import CantAccessAccount
 
 CONFIG_FILE = config.files["config_file"]
 CREDENTIALS_FILE = config.files["credentials_file"]
@@ -80,7 +78,7 @@ class AwsProfiles:
         that account
         """
 
-        print("Getting credentials for:")
+        logger.info("Getting credentials for:")
         for account in self.sso_client.account_list:
             account_id = account["accountId"]
             for role_info in self.sso_client.get_role_list(account_id):
@@ -92,18 +90,19 @@ class AwsProfiles:
                         f"{role_name}"
                     )
                 except KeyError as err:
-                    print(
-                        f"Can't get map for account {account_id}. New account?\n"
-                        f"SKIPPING: {err}"
+                    logger.error(
+                        "Can't get map for account {account_id}. New account? SKIPPING: {err}",
+                        account_id,
+                        err,
                     )
                     continue
                 config_profile = f"profile {creds_profile}"
-                print(f"{creds_profile}")
+                logger.info('Created "%s"', creds_profile)
 
                 try:
                     creds = self.sso_client.get_role_creds(account_id, role_name)
                 except CantAccessAccount as error:
-                    print(f"Unable to access account {account}: {error}")
+                    logger.error("Unable to access account %s: %s", account, error)
                     continue
 
                 self.update_config(config_profile, account_id, role_name)
@@ -121,13 +120,13 @@ class AwsProfiles:
             self.credentials_file["path"],
         )
 
-        print(f'Writing "{credentials_file}"')
+        logger.info('Writing "%s"', credentials_file)
         with open(
             self.credentials_file["path"], mode="w", encoding="utf-8"
         ) as credentials_file_fp:
             current_credentials.write(credentials_file_fp)
 
-        print(f'Writing "{config_file}"')
+        logger.info('Writing "%s"', config_file)
         with open(CONFIG_FILE, mode="w", encoding="utf-8") as config_file_fp:
             current_config.write(config_file_fp)
 
