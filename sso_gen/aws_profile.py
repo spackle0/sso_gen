@@ -6,10 +6,11 @@ Class for manipulating AWS configuration and credentials files
 # Standard Library
 import configparser
 
-# Custom Libraries
-from sso_gen import config
+# Third Party Libraries
+from .custom_exceptions import CantAccessAccount
 
-from . import sso
+# Custom Libraries
+from . import config, sso
 
 CONFIG_FILE = config.files["config_file"]
 CREDENTIALS_FILE = config.files["credentials_file"]
@@ -99,7 +100,11 @@ class AwsProfiles:
                 config_profile = f"profile {creds_profile}"
                 print(f"{creds_profile}")
 
-                creds = self.sso_client.get_role_creds(account_id, role_name)
+                try:
+                    creds = self.sso_client.get_role_creds(account_id, role_name)
+                except CantAccessAccount as error:
+                    print(f"Unable to access account {account}: {error}")
+                    continue
 
                 self.update_config(config_profile, account_id, role_name)
                 self.update_credential(creds_profile, creds)

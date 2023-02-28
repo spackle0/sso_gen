@@ -18,18 +18,14 @@ from botocore.exceptions import ClientError, ParamValidationError
 from dateutil import parser
 
 # Custom Libraries
-from sso_gen import config
+from . import config
+from .custom_exceptions import (CantAccessAccount, CommandError,
+                                       NeedNewToken)
 
 CACHE_DIR = config.files["cache_dir"]
 
 
 # Classes
-class NeedNewToken(Exception):
-    """If there is no cached token"""
-
-
-class CommandError(Exception):
-    """If there was a problem running a shell command"""
 
 
 class SsoClient:
@@ -114,9 +110,14 @@ class SsoClient:
 
     def get_role_creds(self, acct, role) -> dict:
         """Get the temp STS creds for the role/acct"""
-        response = self.client.get_role_credentials(
-            roleName=role, accountId=acct, accessToken=self.access_token
-        )
+        response = {}
+        try:
+            response = self.client.get_role_credentials(
+                roleName=role, accountId=acct, accessToken=self.access_token
+            )
+        except ClientError as error:
+            if error.response["Error"]["Code"] == "ForbiddenException":
+                raise CantAccessAccount from error
         return response["roleCredentials"]
 
     @staticmethod
