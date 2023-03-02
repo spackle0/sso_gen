@@ -68,6 +68,7 @@ lint:
 	@echo "Pylint running"
 	#-poetry run pylint --ignored-classes=SQLAlchemy ${APP_NAME}
 	-poetry run pylint ${APP_NAME}
+	-poetry run mypy
 
 # Security scanning
 .PHONY: sec

@@ -141,12 +141,13 @@ class SsoClient:
             shell=True,
             stdout=subprocess.PIPE,
         ) as process:
-            while True:
-                output = process.stdout.readline().strip().decode("utf-8")
-                if output == "" and process.poll() is not None:
-                    break
-                if output:
-                    logger.info(output)
+            if process.stdout is not None:
+                while True:
+                    output = process.stdout.readline().strip().decode("utf-8")
+                    if output == "" and process.poll() is not None:
+                        break
+                    if output:
+                        logger.info(output)
             return_code = process.poll()
 
         return return_code

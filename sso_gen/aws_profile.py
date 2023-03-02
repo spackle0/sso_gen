@@ -91,7 +91,7 @@ class AwsProfiles:
                     )
                 except KeyError as err:
                     logger.error(
-                        "Can't get map for account {account_id}. New account? SKIPPING: {err}",
+                        "Can't get map for account %s. New account? SKIPPING: %s",
                         account_id,
                         err,
                     )

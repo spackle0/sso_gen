@@ -1,10 +1,14 @@
 # coding=utf-8
+"""
+Convenience functions
+"""
 # Standard Library
 import logging
 from pathlib import Path
 
 
 def get_project_root() -> Path:
+    """This is needed to ensure we find our root-level config and other files"""
     return Path(__file__).parent.parent
 
 
