@@ -12,7 +12,7 @@ import os
 # Third Party Libraries
 from decouple import config
 
-from .utils import create_logger
+from .utils import create_logger, get_project_root
 
 BASE_DIR = os.path.join(os.path.expanduser("~"), ".aws")
 
@@ -32,7 +32,9 @@ files = {
     "credentials_file": os.path.join(BASE_DIR, "credentials"),
 }
 
-with open("acct_map.json", encoding="utf-8") as acct_map:
+with open(
+    os.path.join(get_project_root(), "acct_map.json"), encoding="utf-8"
+) as acct_map:
     acct_maps = json.load(acct_map)
 
 aws = {
