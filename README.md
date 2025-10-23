@@ -3,6 +3,7 @@
 
 [![Python 3.10](https://img.shields.io/badge/python-3.10-blue.svg)](https://www.python.org/downloads/release/python-360/) ![semver](https://img.shields.io/badge/semver-0.1.0-blue)
 
+# This code is out of date and won't be maintained.
 
 # AWS Credential Generator via SSO (IAM Identity Center)
 
